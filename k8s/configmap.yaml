@@ -9,5 +9,5 @@ data:
   LOG_LEVEL: info
   SQS_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/608645417480/video-processing-queue.fifo"
   RESULTS_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/608645417480/video-results-queue.fifo"
-  SOURCE_BUCKET: "video-uploads-bucket"
-  RESULTS_BUCKET: "video-results-bucket"
+  SOURCE_BUCKET: "video-processing-storage-fiap-x"
+  RESULTS_BUCKET: "video-processing-storage-fiap-x"

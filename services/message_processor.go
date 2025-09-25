@@ -78,7 +78,6 @@ func NewMessageProcessor(config MessageProcessorConfig) (*MessageProcessor, erro
 func (c MessageProcessorConfig) loadAWSConfig() (aws.Config, error) {
 	return config.LoadDefaultConfig(context.TODO(),
 		config.WithRegion(c.AWSRegion),
-		config.WithCredentialsProvider(aws.AnonymousCredentials{}), // Para LocalStack
 	)
 }
 
