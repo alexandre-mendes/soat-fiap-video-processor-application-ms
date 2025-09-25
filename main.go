@@ -45,6 +45,7 @@ func main() {
 	r.Static("/outputs", "./outputs")
 
 	r.GET("/", controllers.HandleHTML)
+	r.GET("/health", controllers.HandleHealth)
 	r.POST("/upload", controllers.HandleVideoUpload)
 	r.GET("/download/:filename", controllers.HandleDownload)
 	r.GET("/api/status", controllers.HandleStatus)
