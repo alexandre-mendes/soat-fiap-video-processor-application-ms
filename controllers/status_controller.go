@@ -38,19 +38,6 @@ func HandleStatus(c *gin.Context) {
 
 // HandleHealth retorna o status de saúde da aplicação
 func HandleHealth(c *gin.Context) {
-	// Verificar se os diretórios essenciais existem
-	dirs := []string{"uploads", "outputs", "temp"}
-	for _, dir := range dirs {
-		if _, err := os.Stat(dir); os.IsNotExist(err) {
-			c.JSON(http.StatusServiceUnavailable, gin.H{
-				"status":    "unhealthy",
-				"message":   "Required directory missing: " + dir,
-				"timestamp": time.Now().Format(time.RFC3339),
-			})
-			return
-		}
-	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"status":    "healthy",
 		"message":   "Service is running",
