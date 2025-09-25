@@ -1,13 +1,13 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: soat-fiap-video-processor-hpa
+  name: soat-fiap-video-processor-application-ms-hpa
   namespace: default
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: soat-fiap-video-processor
+    name: soat-fiap-video-processor-application-ms
   minReplicas: 2
   maxReplicas: 10
   metrics:

@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: soat-fiap-video-processor
+  name: soat-fiap-video-processor-application-ms
   namespace: default
   labels:
-    app: soat-fiap-video-processor
+    app: soat-fiap-video-processor-application-ms
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: soat-fiap-video-processor
+      app: soat-fiap-video-processor-application-ms
   template:
     metadata:
       labels:
-        app: soat-fiap-video-processor
+        app: soat-fiap-video-processor-application-ms
     spec:
       containers:
-        - name: soat-fiap-video-processor
-          image: 608645417480.dkr.ecr.us-east-1.amazonaws.com/soat-fiap-video-processor:latest
+        - name: soat-fiap-video-processor-application-ms
+          image: 608645417480.dkr.ecr.us-east-1.amazonaws.com/soat-fiap-video-processor-application-ms:latest
           imagePullPolicy: Always
           ports:
             - name: http
