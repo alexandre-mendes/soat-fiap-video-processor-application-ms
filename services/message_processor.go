@@ -305,10 +305,16 @@ func (mp *MessageProcessor) SendProcessingResult(ctx context.Context, processID,
 
 	log.Printf("📨 Enviando resultado para fila: %s", string(resultJSON))
 
-	_, err = mp.sqsClient.SendMessage(ctx, &sqs.SendMessageInput{
+	input := &sqs.SendMessageInput{
 		QueueUrl:    aws.String(mp.config.ResultsQueueURL),
 		MessageBody: aws.String(string(resultJSON)),
-	})
+	}
+	// Adiciona MessageGroupId se a fila for FIFO
+	if len(mp.config.ResultsQueueURL) > 5 && mp.config.ResultsQueueURL[len(mp.config.ResultsQueueURL)-5:] == ".fifo" {
+		input.MessageGroupId = aws.String("soat-fiap-x-group")
+	}
+
+	_, err = mp.sqsClient.SendMessage(ctx, input)
 	if err != nil {
 		return fmt.Errorf("erro ao enviar mensagem para fila de resultados: %w", err)
 	}
