@@ -58,14 +58,20 @@ func NewMessageProcessor(config MessageProcessorConfig) (*MessageProcessor, erro
 		return nil, fmt.Errorf("erro ao carregar configuração AWS: %w", err)
 	}
 
-	sqsClient := sqs.NewFromConfig(cfg, func(o *sqs.Options) {
-		o.BaseEndpoint = aws.String(config.LocalStackURL)
-	})
-
-	s3Client := s3.NewFromConfig(cfg, func(o *s3.Options) {
-		o.BaseEndpoint = aws.String(config.LocalStackURL)
-		o.UsePathStyle = true // Necessário para LocalStack
-	})
+	var sqsClient *sqs.Client
+	var s3Client *s3.Client
+	if config.LocalStackURL != "" {
+		sqsClient = sqs.NewFromConfig(cfg, func(o *sqs.Options) {
+			o.BaseEndpoint = aws.String(config.LocalStackURL)
+		})
+		s3Client = s3.NewFromConfig(cfg, func(o *s3.Options) {
+			o.BaseEndpoint = aws.String(config.LocalStackURL)
+			o.UsePathStyle = true // Necessário para LocalStack
+		})
+	} else {
+		sqsClient = sqs.NewFromConfig(cfg)
+		s3Client = s3.NewFromConfig(cfg)
+	}
 
 	return &MessageProcessor{
 		config:    config,
