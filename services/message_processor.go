@@ -189,6 +189,17 @@ func (mp *MessageProcessor) processMessage(ctx context.Context, message types.Me
 			log.Printf("🗑️ ZIP local removido: %s", localZipPath)
 		}
 
+		// Excluir arquivo original do S3 após processamento
+		_, err = mp.s3Client.DeleteObject(ctx, &s3.DeleteObjectInput{
+			Bucket: aws.String(mp.config.SourceBucket),
+			Key:    aws.String(videoMsg.FileID),
+		})
+		if err != nil {
+			log.Printf("⚠️ Aviso: Erro ao excluir arquivo original do S3: %v", err)
+		} else {
+			log.Printf("🗑️ Arquivo original excluído do S3: s3://%s/%s", mp.config.SourceBucket, videoMsg.FileID)
+		}
+
 		// Deletar mensagem da fila após sucesso completo
 		mp.deleteMessage(ctx, message)
 
