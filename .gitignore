@@ -15,7 +15,7 @@ cmd/message-processor/message-processor
 vendor/
 
 # Arquivos de configuração local
-.env
+#.env
 .env.local
 
 # Diretórios de trabalho
