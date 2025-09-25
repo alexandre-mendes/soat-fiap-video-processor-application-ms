@@ -24,7 +24,7 @@ func main() {
 	config := services.MessageProcessorConfig{
 		SQSQueueURL:     utils.GetEnv("SQS_QUEUE_URL", "http://localhost:4566/000000000000/video-processing-queue"),
 		ResultsQueueURL: utils.GetEnv("RESULTS_QUEUE_URL", "http://localhost:4566/000000000000/video-results-queue"),
-		LocalStackURL:   utils.GetEnv("LOCALSTACK_URL", "http://localhost:4566"),
+		LocalStackURL:   utils.GetEnv("LOCALSTACK_URL", ""),
 		AWSRegion:       utils.GetEnv("AWS_REGION", "us-east-1"),
 		SourceBucket:    utils.GetEnv("SOURCE_BUCKET", "video-bucket"),
 		ResultsBucket:   utils.GetEnv("RESULTS_BUCKET", "video-results"),
