@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: soat-fiap-video-processor-configmap
+  namespace: default
+data:
+  AWS_REGION: us-east-1
+  PORT: "8080"
+  LOG_LEVEL: info
+  SQS_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/000000000000/video-processing-queue"
+  RESULTS_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/000000000000/video-results-queue"
+  SOURCE_BUCKET: "video-uploads-bucket"
+  RESULTS_BUCKET: "video-results-bucket"

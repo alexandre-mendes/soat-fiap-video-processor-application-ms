@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: soat-fiap-video-processor
+  namespace: default
+  labels:
+    app: soat-fiap-video-processor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: soat-fiap-video-processor
+  template:
+    metadata:
+      labels:
+        app: soat-fiap-video-processor
+    spec:
+      containers:
+        - name: soat-fiap-video-processor
+          image: 608645417480.dkr.ecr.us-east-1.amazonaws.com/soat-fiap-video-processor:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_SESSION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: AWS_SESSION_TOKEN
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: soat-fiap-video-processor-configmap
+                  key: AWS_REGION
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: soat-fiap-video-processor-configmap
+                  key: PORT
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: soat-fiap-video-processor-configmap
+                  key: LOG_LEVEL
+            - name: SQS_QUEUE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: soat-fiap-video-processor-configmap
+                  key: SQS_QUEUE_URL
+            - name: RESULTS_QUEUE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: soat-fiap-video-processor-configmap
+                  key: RESULTS_QUEUE_URL
+            - name: SOURCE_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: soat-fiap-video-processor-configmap
+                  key: SOURCE_BUCKET
+            - name: RESULTS_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: soat-fiap-video-processor-configmap
+                  key: RESULTS_BUCKET
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
