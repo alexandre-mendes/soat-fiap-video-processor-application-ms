@@ -7,7 +7,7 @@ data:
   AWS_REGION: us-east-1
   PORT: "8080"
   LOG_LEVEL: info
-  SQS_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/000000000000/video-processing-queue"
-  RESULTS_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/000000000000/video-results-queue"
+  SQS_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/608645417480/video-processing-queue.fifo"
+  RESULTS_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/608645417480/video-results-queue.fifo"
   SOURCE_BUCKET: "video-uploads-bucket"
   RESULTS_BUCKET: "video-results-bucket"
