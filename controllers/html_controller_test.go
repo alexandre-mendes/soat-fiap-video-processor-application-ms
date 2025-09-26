@@ -26,13 +26,13 @@ func TestHandleHTML(t *testing.T) {
 }
 
 func TestGetHTMLForm(t *testing.T) {
-   html := GetHTMLForm()
-   if html == "" {
-	   t.Error("Esperado HTML não vazio")
-   }
-   if !containsHTML(html, "<form") {
-	   t.Error("Esperado HTML de formulário")
-   }
+	html := GetHTMLForm()
+	if html == "" {
+		t.Error("Esperado HTML não vazio")
+	}
+	if !containsHTML(html, "<form") {
+		t.Error("Esperado HTML de formulário")
+	}
 }
 
 func containsHTML(s, substr string) bool {

@@ -88,6 +88,7 @@ func (m *mockSQSClient) DeleteMessage(ctx context.Context, input *sqs.DeleteMess
 type mockS3Client struct {
 	failGet bool
 }
+
 func (m *mockS3Client) GetObject(ctx context.Context, input *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
 	if m.failGet {
 		return nil, errors.New("erro simulado no GetObject")

@@ -19,5 +19,3 @@ func TestHandleDownload_FileNotFound(t *testing.T) {
 		t.Errorf("Esperado status 404, obtido %d", w.Code)
 	}
 }
-
-
