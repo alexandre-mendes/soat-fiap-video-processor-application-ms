@@ -10,7 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var messageProcessor *services.MessageProcessor
+var messageProcessor MessageProcessorInterface
+
+type MessageProcessorInterface interface {
+	DownloadFromS3(ctx context.Context, bucket, key string) (string, error)
+	GetSourceBucket() string
+	StartProcessing(ctx context.Context)
+	UploadZipToS3(ctx context.Context, bucket, key, localZipPath string) error
+	SendProcessingResult(ctx context.Context, processID, zipKey, status string) error
+}
 
 // Inicializar o processador de mensagens (chamado no main.go)
 func InitMessageProcessor() error {
@@ -27,14 +35,13 @@ func InitMessageProcessor() error {
 	}
 
 	var err error
-	messageProcessor, err = services.NewMessageProcessor(config)
+	mp, err := services.NewMessageProcessor(config)
 	if err != nil {
 		return err
 	}
-
+	messageProcessor = mp
 	// Iniciar processamento em background
 	go messageProcessor.StartProcessing(context.Background())
-
 	return nil
 }
 

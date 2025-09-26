@@ -5,9 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"video-processor/services"
-
+	"context"
 	"github.com/gin-gonic/gin"
 )
 
@@ -55,10 +53,21 @@ func TestHandleProcessMessage_DadosInvalidos(t *testing.T) {
 	}
 }
 
+
+// Mock para MessageProcessor
+type mockProcessor struct{}
+func (m *mockProcessor) DownloadFromS3(ctx context.Context, bucket, key string) (string, error) {
+	return "video.mp4", nil
+}
+func (m *mockProcessor) GetSourceBucket() string { return "bucket" }
+func (m *mockProcessor) StartProcessing(ctx context.Context) {}
+func (m *mockProcessor) UploadZipToS3(ctx context.Context, bucket, key, localZipPath string) error { return nil }
+func (m *mockProcessor) SendProcessingResult(ctx context.Context, processID, zipKey, status string) error { return nil }
+
 func TestHandleMessageProcessorStatus_Ativo(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-	messageProcessor = &services.MessageProcessor{}
+	messageProcessor = &mockProcessor{}
 	HandleMessageProcessorStatus(c)
 	if w.Code != http.StatusOK {
 		t.Errorf("Esperado status 200, obtido %d", w.Code)
@@ -68,5 +77,22 @@ func TestHandleMessageProcessorStatus_Ativo(t *testing.T) {
 	}
 	if !containsStatus(w.Body.String(), "processor_active") {
 		t.Error("Esperado campo processor_active na resposta")
+	}
+}
+func TestHandleProcessMessage_Sucesso(t *testing.T) {
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.Request, _ = http.NewRequest("POST", "/api/process-message", bytes.NewBuffer([]byte(`{"fileId":"video.mp4","processId":"proc-1"}`)))
+	c.Request.Header.Set("Content-Type", "application/json")
+
+	messageProcessor = &mockProcessor{}
+
+	HandleProcessMessage(c)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Esperado status 200, obtido %d", w.Code)
+	}
+	if w.Body.String() == "" {
+		t.Error("Esperado corpo não vazio para sucesso")
 	}
 }
