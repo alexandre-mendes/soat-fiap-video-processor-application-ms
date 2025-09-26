@@ -17,6 +17,7 @@ import (
 // Deve estar após os imports, antes das funções de teste
 
 type mockS3ClientErro struct{}
+
 func (m *mockS3ClientErro) PutObject(ctx context.Context, input *s3.PutObjectInput, optFns ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
 	return nil, errors.New("erro simulado no upload")
 }
@@ -171,6 +172,7 @@ func ptr(s string) *string { return &s }
 // Deve estar após os imports, antes das funções de teste
 
 type mockSQSClientErro struct{}
+
 func (m *mockSQSClientErro) SendMessage(ctx context.Context, input *sqs.SendMessageInput, optFns ...func(*sqs.Options)) (*sqs.SendMessageOutput, error) {
 	return nil, errors.New("erro simulado no envio")
 }
@@ -193,6 +195,7 @@ func TestSendProcessingResult_ErroNoEnvioSQS(t *testing.T) {
 // Deve estar após os imports, antes das funções de teste
 
 type mockS3ClientGetErro struct{}
+
 func (m *mockS3ClientGetErro) GetObject(ctx context.Context, input *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error) {
 	return nil, errors.New("erro simulado no GetObject")
 }
@@ -232,6 +235,7 @@ func TestDownloadFromS3_ErroNoGetObject(t *testing.T) {
 // Deve estar após os imports, antes das funções de teste
 
 type mockSQSClientDeleteErro struct{}
+
 func (m *mockSQSClientDeleteErro) DeleteMessage(ctx context.Context, input *sqs.DeleteMessageInput, optFns ...func(*sqs.Options)) (*sqs.DeleteMessageOutput, error) {
 	return nil, errors.New("erro simulado no DeleteMessage")
 }
@@ -253,6 +257,7 @@ func TestDeleteMessage_ErroNoDeleteSQS(t *testing.T) {
 // Deve estar após os imports, antes das funções de teste
 
 type mockS3ClientDeleteErro struct{}
+
 func (m *mockS3ClientDeleteErro) DeleteObject(ctx context.Context, input *s3.DeleteObjectInput, optFns ...func(*s3.Options)) (*s3.DeleteObjectOutput, error) {
 	return nil, errors.New("erro simulado no DeleteObject")
 }

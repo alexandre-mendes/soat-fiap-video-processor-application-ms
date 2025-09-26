@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"bytes"
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"context"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -53,16 +54,20 @@ func TestHandleProcessMessage_DadosInvalidos(t *testing.T) {
 	}
 }
 
-
 // Mock para MessageProcessor
 type mockProcessor struct{}
+
 func (m *mockProcessor) DownloadFromS3(ctx context.Context, bucket, key string) (string, error) {
 	return "video.mp4", nil
 }
-func (m *mockProcessor) GetSourceBucket() string { return "bucket" }
+func (m *mockProcessor) GetSourceBucket() string             { return "bucket" }
 func (m *mockProcessor) StartProcessing(ctx context.Context) {}
-func (m *mockProcessor) UploadZipToS3(ctx context.Context, bucket, key, localZipPath string) error { return nil }
-func (m *mockProcessor) SendProcessingResult(ctx context.Context, processID, zipKey, status string) error { return nil }
+func (m *mockProcessor) UploadZipToS3(ctx context.Context, bucket, key, localZipPath string) error {
+	return nil
+}
+func (m *mockProcessor) SendProcessingResult(ctx context.Context, processID, zipKey, status string) error {
+	return nil
+}
 
 func TestHandleMessageProcessorStatus_Ativo(t *testing.T) {
 	w := httptest.NewRecorder()
