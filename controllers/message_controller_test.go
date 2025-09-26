@@ -6,8 +6,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"video-processor/services"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TestHandleProcessMessage_BadRequest(t *testing.T) {

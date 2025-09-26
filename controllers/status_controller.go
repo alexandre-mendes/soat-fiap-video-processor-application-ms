@@ -10,15 +10,15 @@ import (
 )
 
 var globZipFiles = func(pattern string) ([]string, error) {
- return filepath.Glob(pattern)
+	return filepath.Glob(pattern)
 }
 
 func HandleStatus(c *gin.Context) {
- files, err := globZipFiles(filepath.Join("outputs", "*.zip"))
- if err != nil {
- c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao listar arquivos"})
- return
- }
+	files, err := globZipFiles(filepath.Join("outputs", "*.zip"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao listar arquivos"})
+		return
+	}
 
 	var results []map[string]interface{}
 	for _, file := range files {

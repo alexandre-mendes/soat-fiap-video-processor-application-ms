@@ -6,9 +6,7 @@ import (
 	"errors"
 	"io"
 	"testing"
-)
 
-import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
@@ -59,12 +57,11 @@ func TestProcessMessage_InvalidJSON(t *testing.T) {
 
 func TestUploadZipToS3_ErroAoAbrirArquivo(t *testing.T) {
 	mp := &MessageProcessor{}
-	 err := mp.UploadZipToS3(context.TODO(), "bucket", "key", "arquivo_inexistente.zip")
+	err := mp.UploadZipToS3(context.TODO(), "bucket", "key", "arquivo_inexistente.zip")
 	if err == nil {
 		t.Error("Esperado erro ao abrir arquivo ZIP inexistente")
 	}
 }
-
 
 // Mock SQSClient para testes
 type mockSQSClient struct {

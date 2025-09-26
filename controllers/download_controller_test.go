@@ -1,11 +1,11 @@
 package controllers
 
 import (
- "net/http"
- "net/http/httptest"
- "testing"
+	"net/http"
+	"net/http/httptest"
+	"testing"
 
- "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 )
 
 func TestHandleDownload_FileNotFound(t *testing.T) {
@@ -19,4 +19,3 @@ func TestHandleDownload_FileNotFound(t *testing.T) {
 		t.Errorf("Esperado status 404, obtido %d", w.Code)
 	}
 }
-
