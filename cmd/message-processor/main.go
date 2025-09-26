@@ -12,49 +12,53 @@ import (
 )
 
 func main() {
-	// Carregar variáveis do arquivo .env
-	if err := utils.LoadEnv(".env"); err != nil {
-		log.Printf("⚠️ Aviso: Não foi possível carregar .env: %v", err)
-		log.Println("📄 Usando apenas variáveis de ambiente do sistema")
-	} else {
-		log.Println("✅ Arquivo .env carregado com sucesso")
-	}
+       run()
+}
 
-	// Configuração do processador de mensagens usando .env
-	config := services.MessageProcessorConfig{
-		SQSQueueURL:     utils.GetEnv("SQS_QUEUE_URL", "http://localhost:4566/000000000000/video-processing-queue"),
-		ResultsQueueURL: utils.GetEnv("RESULTS_QUEUE_URL", "http://localhost:4566/000000000000/video-results-queue"),
-		LocalStackURL:   utils.GetEnv("LOCALSTACK_URL", ""),
-		AWSRegion:       utils.GetEnv("AWS_REGION", "us-east-1"),
-		SourceBucket:    utils.GetEnv("SOURCE_BUCKET", "video-bucket"),
-		ResultsBucket:   utils.GetEnv("RESULTS_BUCKET", "video-results"),
-		PollingInterval: utils.GetEnvDuration("POLLING_INTERVAL_SECONDS", 5*time.Second),
-		MaxMessages:     int32(utils.GetEnvInt("MAX_MESSAGES", 10)),
-	}
+func run() {
+       // Carregar variáveis do arquivo .env
+       if err := utils.LoadEnv(".env"); err != nil {
+	       log.Printf("⚠️ Aviso: Não foi possível carregar .env: %v", err)
+	       log.Println("📄 Usando apenas variáveis de ambiente do sistema")
+       } else {
+	       log.Println("✅ Arquivo .env carregado com sucesso")
+       }
 
-	// Criar processador
-	processor, err := services.NewMessageProcessor(config)
-	if err != nil {
-		log.Fatalf("❌ Erro ao criar processador: %v", err)
-	}
+       // Configuração do processador de mensagens usando .env
+       config := services.MessageProcessorConfig{
+	       SQSQueueURL:     utils.GetEnv("SQS_QUEUE_URL", "http://localhost:4566/000000000000/video-processing-queue"),
+	       ResultsQueueURL: utils.GetEnv("RESULTS_QUEUE_URL", "http://localhost:4566/000000000000/video-results-queue"),
+	       LocalStackURL:   utils.GetEnv("LOCALSTACK_URL", ""),
+	       AWSRegion:       utils.GetEnv("AWS_REGION", "us-east-1"),
+	       SourceBucket:    utils.GetEnv("SOURCE_BUCKET", "video-bucket"),
+	       ResultsBucket:   utils.GetEnv("RESULTS_BUCKET", "video-results"),
+	       PollingInterval: utils.GetEnvDuration("POLLING_INTERVAL_SECONDS", 5*time.Second),
+	       MaxMessages:     int32(utils.GetEnvInt("MAX_MESSAGES", 10)),
+       }
 
-	// Criar contexto para controle de cancelamento
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+       // Criar processador
+       processor, err := services.NewMessageProcessor(config)
+       if err != nil {
+	       log.Fatalf("❌ Erro ao criar processador: %v", err)
+       }
 
-	// Capturar sinais do sistema para shutdown graceful
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+       // Criar contexto para controle de cancelamento
+       ctx, cancel := context.WithCancel(context.Background())
+       defer cancel()
 
-	// Iniciar processamento em goroutine
-	go processor.StartProcessing(ctx)
+       // Capturar sinais do sistema para shutdown graceful
+       sigChan := make(chan os.Signal, 1)
+       signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
-	// Aguardar sinal de shutdown
-	<-sigChan
-	log.Println("🛑 Recebido sinal de shutdown, parando aplicação...")
-	cancel()
+       // Iniciar processamento em goroutine
+       go processor.StartProcessing(ctx)
 
-	// Aguardar um tempo para finalização graceful
-	time.Sleep(2 * time.Second)
-	log.Println("👋 Aplicação finalizada")
+       // Aguardar sinal de shutdown
+       <-sigChan
+       log.Println("🛑 Recebido sinal de shutdown, parando aplicação...")
+       cancel()
+
+       // Aguardar um tempo para finalização graceful
+       time.Sleep(2 * time.Second)
+       log.Println("👋 Aplicação finalizada")
 }
