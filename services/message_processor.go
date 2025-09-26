@@ -1,9 +1,12 @@
 package services
 
 import (
+	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"log"
 	"os"
 	"path/filepath"
@@ -11,9 +14,6 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/aws/aws-sdk-go-v2/service/sqs"
-	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 )
 
 // Estrutura da mensagem SQS esperada
@@ -47,8 +47,8 @@ type MessageProcessorConfig struct {
 // Processador principal de mensagens
 type MessageProcessor struct {
 	config    MessageProcessorConfig
-	sqsClient *sqs.Client
-	s3Client  *s3.Client
+	sqsClient SQSClient
+	s3Client  S3Client
 }
 
 // Criar novo processador de mensagens
@@ -332,4 +332,18 @@ func (mp *MessageProcessor) SendProcessingResult(ctx context.Context, processID,
 
 	log.Printf("✅ Resultado enviado com sucesso para fila de resultados")
 	return nil
+}
+
+// Interfaces para facilitar mocks nos testes
+// Mantém compatibilidade com os clients originais
+type SQSClient interface {
+	ReceiveMessage(ctx context.Context, input *sqs.ReceiveMessageInput, optFns ...func(*sqs.Options)) (*sqs.ReceiveMessageOutput, error)
+	SendMessage(ctx context.Context, input *sqs.SendMessageInput, optFns ...func(*sqs.Options)) (*sqs.SendMessageOutput, error)
+	DeleteMessage(ctx context.Context, input *sqs.DeleteMessageInput, optFns ...func(*sqs.Options)) (*sqs.DeleteMessageOutput, error)
+}
+
+type S3Client interface {
+	GetObject(ctx context.Context, input *s3.GetObjectInput, optFns ...func(*s3.Options)) (*s3.GetObjectOutput, error)
+	PutObject(ctx context.Context, input *s3.PutObjectInput, optFns ...func(*s3.Options)) (*s3.PutObjectOutput, error)
+	DeleteObject(ctx context.Context, input *s3.DeleteObjectInput, optFns ...func(*s3.Options)) (*s3.DeleteObjectOutput, error)
 }

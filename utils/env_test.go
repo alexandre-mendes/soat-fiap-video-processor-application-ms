@@ -32,6 +32,17 @@ func TestGetEnvBool(t *testing.T) {
 	}
 }
 
+func TestGetEnvBool_Invalid(t *testing.T) {
+	os.Setenv("BOOL_ENV", "talvez")
+	if !GetEnvBool("BOOL_ENV", true) {
+		t.Error("Esperado default true para valor inválido")
+	}
+	if GetEnvBool("BOOL_ENV", false) {
+		t.Error("Esperado default false para valor inválido")
+	}
+	os.Unsetenv("BOOL_ENV")
+}
+
 func TestGetEnvInt(t *testing.T) {
 	os.Setenv("INT_ENV", "42")
 	if GetEnvInt("INT_ENV", 1) != 42 {
@@ -43,6 +54,14 @@ func TestGetEnvInt(t *testing.T) {
 	}
 }
 
+func TestGetEnvInt_Invalid(t *testing.T) {
+	os.Setenv("INT_ENV", "abc")
+	if GetEnvInt("INT_ENV", 99) != 99 {
+		t.Errorf("Esperado default 99 para valor inválido, obtido %d", GetEnvInt("INT_ENV", 99))
+	}
+	os.Unsetenv("INT_ENV")
+}
+
 func TestGetEnvDuration(t *testing.T) {
 	os.Setenv("DUR_ENV", "2s")
 	if GetEnvDuration("DUR_ENV", time.Second) != 2*time.Second {
@@ -52,4 +71,12 @@ func TestGetEnvDuration(t *testing.T) {
 	if GetEnvDuration("DUR_ENV", 3*time.Second) != 3*time.Second {
 		t.Errorf("Esperado default 3s, obtido %v", GetEnvDuration("DUR_ENV", 3*time.Second))
 	}
+}
+
+func TestGetEnvDuration_Invalid(t *testing.T) {
+	os.Setenv("DUR_ENV", "abc")
+	if GetEnvDuration("DUR_ENV", 5*time.Second) != 5*time.Second {
+		t.Errorf("Esperado default 5s para valor inválido, obtido %v", GetEnvDuration("DUR_ENV", 5*time.Second))
+	}
+	os.Unsetenv("DUR_ENV")
 }

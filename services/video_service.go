@@ -72,23 +72,26 @@ func ProcessVideo(videoPath, timestamp string) models.ProcessingResult {
 }
 
 func CreateZipFile(files []string, zipPath string) error {
-	zipFile, err := os.Create(zipPath)
-	if err != nil {
-		return err
-	}
-	defer zipFile.Close()
+	   if len(files) == 0 {
+		   return fmt.Errorf("lista de arquivos vazia")
+	   }
+	   zipFile, err := os.Create(zipPath)
+	   if err != nil {
+		   return err
+	   }
+	   defer zipFile.Close()
 
-	zipWriter := zip.NewWriter(zipFile)
-	defer zipWriter.Close()
+	   zipWriter := zip.NewWriter(zipFile)
+	   defer zipWriter.Close()
 
-	for _, file := range files {
-		err := addFileToZip(zipWriter, file)
-		if err != nil {
-			return err
-		}
-	}
+	   for _, file := range files {
+		   err := addFileToZip(zipWriter, file)
+		   if err != nil {
+			   return err
+		   }
+	   }
 
-	return nil
+	   return nil
 }
 
 func addFileToZip(zipWriter *zip.Writer, filename string) error {

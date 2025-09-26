@@ -9,6 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func containsStatus(s, substr string) bool {
+	return len(s) > 0 && len(substr) > 0 && (s == substr || (len(s) > len(substr) && (s[0:len(substr)] == substr || containsStatus(s[1:], substr))))
+}
+
 func TestHandleStatus(t *testing.T) {
 	filename := "test_status.zip"
 	filePath := "outputs/" + filename
@@ -31,13 +35,9 @@ func TestHandleStatus(t *testing.T) {
 	if w.Body.String() == "" {
 		t.Error("Esperado corpo não vazio")
 	}
-	if !contains(w.Body.String(), filename) {
+	if !containsStatus(w.Body.String(), filename) {
 		t.Errorf("Resposta não contém o arquivo esperado: %s", filename)
 	}
-}
-
-func contains(s, substr string) bool {
-	return len(s) > 0 && len(substr) > 0 && (s == substr || (len(s) > len(substr) && (s[0:len(substr)] == substr || contains(s[1:], substr))))
 }
 
 func TestHandleHealth(t *testing.T) {
@@ -52,7 +52,7 @@ func TestHandleHealth(t *testing.T) {
 	if w.Body.String() == "" {
 		t.Error("Esperado corpo não vazio")
 	}
-	if !contains(w.Body.String(), "healthy") {
+	if !containsStatus(w.Body.String(), "healthy") {
 		t.Error("Resposta não contém 'healthy'")
 	}
 }

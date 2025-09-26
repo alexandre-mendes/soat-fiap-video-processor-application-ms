@@ -31,7 +31,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: >
-            -Dsonar.projectKey=alexandre-mendes_soat-fiap-video-processor-application-ms
-            -Dsonar.organization=alexandre-mendes
-            -Dsonar.go.coverage.reportPaths=coverage.out
+            args: >
+              -Dsonar.projectKey=alexandre-mendes_soat-fiap-video-processor-application-ms
+              -Dsonar.organization=alexandre-mendes
+              -Dsonar.go.coverage.reportPaths=coverage.out
+              -Dsonar.exclusions=main.go,cmd/message-processor/main.go,models/video.go,scripts/**,Dockerfile,k8s/**,README.md
