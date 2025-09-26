@@ -35,4 +35,4 @@ jobs:
               -Dsonar.projectKey=alexandre-mendes_soat-fiap-video-processor-application-ms
               -Dsonar.organization=alexandre-mendes
               -Dsonar.go.coverage.reportPaths=coverage.out
-              -Dsonar.exclusions=main.go,cmd/message-processor/main.go,models/video.go,scripts/**,Dockerfile,k8s/**,README.md,controllers/**,services/**,utils/**,!controllers/message_controller.go,!services/message_processor.go,!services/video_service.go,!utils/env.go
+              -Dsonar.exclusions=main.go,scripts/**,Dockerfile,k8s/**,README.md,models/**,cmd/message-processor/main.go,controllers/download_controller.go,controllers/html_controller.go,controllers/metrics_controller.go,controllers/status_controller.go,controllers/video_controller.go,services/message_processor.go,services/video_service.go,utils/env.go
