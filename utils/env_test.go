@@ -80,3 +80,28 @@ func TestGetEnvDuration_Invalid(t *testing.T) {
 	}
 	os.Unsetenv("DUR_ENV")
 }
+
+func TestLoadEnv_FileNotFound(t *testing.T) {
+	err := LoadEnv("arquivo_inexistente.env")
+	if err == nil {
+		t.Error("Esperado erro ao carregar arquivo inexistente")
+	}
+}
+
+func TestLoadEnv_FileComConteudo(t *testing.T) {
+	file := "test.env"
+	conteudo := "TESTE_ENV=valor\nOUTRO_ENV=123"
+	os.WriteFile(file, []byte(conteudo), 0644)
+	defer os.Remove(file)
+	os.Unsetenv("TESTE_ENV")
+	os.Unsetenv("OUTRO_ENV")
+	if err := LoadEnv(file); err != nil {
+		t.Errorf("Erro ao carregar env: %v", err)
+	}
+	if os.Getenv("TESTE_ENV") != "valor" {
+		t.Errorf("Esperado 'valor', obtido '%s'", os.Getenv("TESTE_ENV"))
+	}
+	if os.Getenv("OUTRO_ENV") != "123" {
+		t.Errorf("Esperado '123', obtido '%s'", os.Getenv("OUTRO_ENV"))
+	}
+}

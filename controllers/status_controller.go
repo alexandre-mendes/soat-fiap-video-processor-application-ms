@@ -9,12 +9,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var globZipFiles = func(pattern string) ([]string, error) {
+ return filepath.Glob(pattern)
+}
+
 func HandleStatus(c *gin.Context) {
-	files, err := filepath.Glob(filepath.Join("outputs", "*.zip"))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao listar arquivos"})
-		return
-	}
+ files, err := globZipFiles(filepath.Join("outputs", "*.zip"))
+ if err != nil {
+ c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao listar arquivos"})
+ return
+ }
 
 	var results []map[string]interface{}
 	for _, file := range files {
