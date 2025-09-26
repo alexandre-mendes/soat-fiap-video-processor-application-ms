@@ -54,6 +54,9 @@ func main() {
 	r.POST("/api/process-message", controllers.HandleProcessMessage)
 	r.GET("/api/message-processor/status", controllers.HandleMessageProcessorStatus)
 
+	// Endpoint para métricas Prometheus
+	r.GET("/metrics", controllers.HandleMetrics)
+
 	port := ":" + utils.GetEnv("PORT", "8080")
 	log.Printf("🎬 Servidor iniciado na porta %s", port[1:])
 	log.Printf("📂 Acesse: http://localhost%s", port)
