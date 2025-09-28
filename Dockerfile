@@ -1,7 +1,7 @@
 # DOCKERFILE SIMPLES (sem boas práticas - propositalmente!)
 # Este é um exemplo de como NÃO fazer um Dockerfile
 
-FROM golang:1.22-alpine AS builder
+FROM golang:1.23.0-alpine AS builder
 
 # Instalar ffmpeg
 RUN apk add --no-cache ffmpeg
