@@ -90,8 +90,8 @@ spec:
                   key: RESULTS_BUCKET
           resources:
             requests:
-              memory: "256Mi"
+              memory: "300Mi"
               cpu: "250m"
             limits:
-              memory: "512Mi"
+              memory: "600Mi"
               cpu: "500m"
